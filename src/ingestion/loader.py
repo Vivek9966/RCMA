@@ -34,7 +34,7 @@ def load_from_riskdata():
 				}
 			)
 			test_document.append(doc)
-	return test_document,train_document
+	return train_document,test_document
 
 
 	# text_splitter = RecursiveCharacterTextSplitter( chunk_overlap=chunk_overlap,chunk_size=chunksize)
