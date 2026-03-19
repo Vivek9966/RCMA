@@ -2,3 +2,5 @@
 ignorables/
 *.env
 data/
+Backup/
+test.py

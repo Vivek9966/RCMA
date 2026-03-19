@@ -19,7 +19,7 @@ def load_from_riskdata():
 		doc = Document(
 			page_content=value[2],
 			metadata = {
-				'id':value[0],'question':value[1]
+				'id':value[0],'question':value[1] , 'source':'riskdata'
 			}
 		)
 		train_document.append(doc)
@@ -30,7 +30,7 @@ def load_from_riskdata():
 			doc=Document(
 				page_content=value[2],
 				metadata={
-					'id':value[0] , 'question':value[1]
+					'id':value[0] , 'question':value[1] ,'source':'riskdata'
 				}
 			)
 			test_document.append(doc)
@@ -59,7 +59,7 @@ def load_from_pdf(pdf_name,chunksize = 1000,chunk_overlap=100):
 	pdf_list = pdf_name if isinstance(pdf_name,list) else [pdf_name]
 	documents=[]
 	for pdf in pdf_list:
-		loader = PyPDFLoader(ADD_PATH/pdf)
+		loader = PyPDFLoader(ADD_PATH/pdf ,mode="page")
 		pages = loader.load()
 		for page in pages:
 			page.metadata['source'] = pdf

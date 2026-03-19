@@ -10,7 +10,7 @@ EMBEDDINGS_MODEL = 'aminhaeri/risk-embed'
 
 def load_all_docs():
 	risk_data_train, risk_data_test = load_from_riskdata() 
-	pdf_docs = load_from_pdf([ 'basel_iii.pdf','gdpr.pdf','mifid_ii.pdf','finra_aml.pdf'])
+	pdf_docs = load_from_pdf([ 'basel_iii.pdf','gdpr.pdf','mifid_ii.pdf','finra_aml.pdf','FATF Recommendation.pdf','Foreign Bank Branch Deposit Requirement.pdf','guide_to_foriegn_banking.pdf','ThirdParty Risk Management Guideline.pdf'])
 	all_docs = risk_data_train+pdf_docs
 	print(f"RiskData: {len(risk_data_train)} chunks")
 	print(f"PDFs: {len(pdf_docs)} chunks")  
@@ -31,6 +31,15 @@ def index_(documents):
 
 
 if __name__ == '__main__':
-	all_docs =load_all_docs()
-	index_(all_docs)
-	#print(f'Risk Data \n {all_docs[0]} \n \n PDF_docs \n {all_docs[1]}')
+	if not any(Path(VECTORSTORE_PATH).iterdir()):
+		print("KYA ")
+		all_docs =load_all_docs()
+		index_(all_docs)
+		print(f'Risk Data \n {all_docs[0]} \n \n PDF_docs \n {all_docs[1]}')
+	else:
+		embedding = HuggingFaceEmbeddings(model_name=EMBEDDINGS_MODEL)
+		vector_store = FAISS.load_local(VECTORSTORE_PATH,embeddings=embedding,allow_dangerous_deserialization=True)
+		result = vector_store.similarity_search("what are the customer due diligence requirements for AML compliance?",k=3)
+		for i,d in enumerate(result):
+			print(f"Source- {d.metadata.get('source')} \t {d.metadata.get('page_label',00)}\n")
+			print(f"Content- {d.page_content[:3000]}")
