@@ -5,22 +5,17 @@ from src.models.schemas import RetrievedContext , ViolationFinding
 
 class ComplianceState(TypedDict):
     
-    # user_input
-    ip_doc : str
-    doc_type: str
+    input_document: str
+    document_type: str
 
-    # node1
-    comp_ques : Annotated[List[str],operator.add]
+    compliance_questions: Annotated[List[str], operator.add]
+    retrieved_contexts: Annotated[List[str], operator.add]
 
-    # node2
-    retrive_context : Annotated[List[str],operator.add]
+    reasoning_trace: str
 
-    #node3
-    reasoning: str
-    #node4
-    findings : Annotated[List[ViolationFinding],operator.add]
-    max_severity:str
-    #node5
-    report_md :str
-    audit_id:str
-    escalated : bool
+    findings: Annotated[List[ViolationFinding], operator.add]
+    max_severity: str
+
+    report_markdown: str
+    audit_id: str
+    escalated: bool

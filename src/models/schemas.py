@@ -29,3 +29,6 @@ class ComplianceReport(BaseModel):
     overall_severity:Literal['low','medium', 'high','critical']=Field(None, description="Aggregated severity level across all findings")
     generated_at:Optional[str] = Field(None, description="Timestamp of report generation")
     report_id : str  = Field(default_factory=lambda:str(uuid.uuid4()))
+
+class ViolationFindingList(BaseModel):
+    findings : List[ViolationFinding]  = Field(..., description = "Converts the violation findings into a single pydanic object for pydanctic output parser")
