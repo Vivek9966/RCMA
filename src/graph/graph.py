@@ -9,7 +9,7 @@ def graph():
     builder.add_node("query_analyzer_node",query_analyzer_node)
     builder.add_node('rag_retriever_node', rag_retriever_node)
     builder.add_node('compliance_reasoning_node',compliance_reasoning_node)
-    builder.add_node('violaiton_node',violation_node)
+    builder.add_node('violation_node',violation_node)
     builder.add_node('report_compiler_node',report_compiler_node)
     builder.add_node('human_escalation_node',human_escalation_node)
 
@@ -27,12 +27,13 @@ def graph():
     builder.add_edge('report_compiler_node',END)
     builder.add_edge('human_escalation_node',END)
 
-    graph = builder.compile
+    graph = builder.compile()
 
     return graph
 
 if __name__ == "__main__":
-    graph_ = graph()
-    result = graph.invoke({
-        
+    test_graph = graph()
+    result = test_graph.invoke({
+        "input_document": "Customer transferred $15,000 to an overseas account in three separate transactions of $5,000 each within 24 hours.",
+        "document_type": "transaction",
     })

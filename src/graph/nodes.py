@@ -69,7 +69,7 @@ def rag_retriever_node(state: ComplianceState)-> dict:
         citation = ChunkCitationWrapper(results)
         context = RetrievedContext(question=question , associated_chks=citation)
         contexts.append(context)
-    print("#"*30 ,f"\nRetrieved Context for   {len(contexts)} \n\n " , "#"*30)
+   # print("#"*30 ,f"\nRetrieved Context for   {len(contexts)} \n\n " , "#"*30)
     return {'retrieved_contexts' : contexts}
 
 def compliance_reasoning_node(state: ComplianceState) -> dict:
@@ -106,7 +106,7 @@ def violation_node(state: ComplianceState) -> dict:
     for finding in result.findings:
         if severity_order.index(finding.severity)>severity_order.index(max_sev):
             max_sev = finding.severity
-    print('-'*50, f"\n total findings {len(result.findings)} severity {max_sev}",'-'*50)
+   # print('-'*50, f"\n total findings {len(result.findings)} severity {max_sev}",'-'*50)
     return {
         'findings' : result.findings , 
         'max_severity' : max_sev
