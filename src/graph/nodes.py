@@ -40,8 +40,8 @@ def query_analyzer_node(state:ComplianceState) -> ComplianceState:
 )
     chain = prompt_text| llm | op_parser
     questions = chain.invoke({'document':document,"doc_type":doc_type})
-    print(f"Generated {len(questions)} compliance questions")
-    print(state['compliance_questions'])
+    #print(f"Generated {len(questions)} compliance questions")
+    #print(state['compliance_questions'])
     
     return {"compliance_questions": questions}
 

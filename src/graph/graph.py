@@ -37,3 +37,4 @@ if __name__ == "__main__":
         "input_document": "Customer transferred $15,000 to an overseas account in three separate transactions of $5,000 each within 24 hours.",
         "document_type": "transaction",
     })
+    print(result["report_markdown"])
