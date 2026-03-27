@@ -7,8 +7,11 @@ from pathlib import Path
 from langchain_community.vectorstores import FAISS
 import os 
 from langchain_huggingface import HuggingFaceEmbeddings
+from typing import List
 from dotenv import load_dotenv
 from pydantic import BaseModel
+import uuid
+from datetime import datetime
 load_dotenv()
 PROMPTS_PATH = Path(os.getenv("PROMPTS_PATH"))
 VECTORSTORE_PATH = Path(os.getenv("VECTORSTORE_PATH"))
@@ -108,6 +111,58 @@ def violation_node(state: ComplianceState) -> dict:
         'findings' : result.findings , 
         'max_severity' : max_sev
     }
+def report_compiler_node(state:ComplianceState) ->dict:
+    findings = state['findings']
+    reasoning = state['reasoning_trace']
+    severity = state['max_severity']
+    report = f""" 
+    Compliance Audit Report
+        ## Overall Severity : {severity.upper()}
+        ## Report_id : str{uuid.uuid4()}
+        ## Generated_on : {datetime.now().strftime("%d %b, %Y  %H:%M")}"
+        ## Findings:
+             """
+    for i ,f in enumerate(findings,1):
+        report+= f""" 
+                ### Finding {i}
+                - Violation {f.violation}    
+                - Severity {f.severity}
+                - Reasoning {f.reasoning}
+                - Confidence {f.confidence}
+                """
+    report += "\n ## Detailed Analysis\n" + reasoning
+    return {
+        "report_markdown":report
+        , "escalated":False
+    }
+
+def human_escalation_node(state: ComplianceState) -> dict:
+    findings = state['findings']
+    severity = state['max_severity']
+    
+    report = f"""
+# CRITICAL ESCALATION — Human Review Required
+- **Severity:** {severity.upper()}
+- **Total Violations:** {len(findings)}
+
+## Violations Requiring Immediate Attention:
+"""
+    for i, f in enumerate(findings, 1):
+        report += f"""
+### Finding {i}
+- **Violation:** {f.violation}
+- **Severity:** {f.severity}
+- **Reasoning:** {f.reasoning}
+"""
+    report += "\n**This report has been flagged for immediate human review.**"
+    
+    return {
+        "report_markdown": report,
+        "audit_id": str(uuid.uuid4()),
+        "escalated": True
+    }
+    
+#def 
 if __name__ == "__main__":
     test_state = {
         "input_document": "Customer transferred $15,000 to an overseas account in three separate transactions of $5,000 each within 24 hours.",
@@ -147,3 +202,9 @@ if __name__ == "__main__":
         print(f"Violation : {f.violation}")
         print(f"Severity : {f.severity}")
         print(f"Reasoning : {f.reasoning[:200]}")
+    print(f"Max severity: {scoring_result['max_severity']}")
+    print(f"Total findings: {len(scoring_result['findings'])}")  
+
+    print("state 3 a Ok")      
+
+    state_after_node4 = {**state_after_node3, **scoring_result}
