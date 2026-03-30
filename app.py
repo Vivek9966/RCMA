@@ -9,7 +9,7 @@ def load_graph():
     return graph()
 g= load_graph()
 
-st.title("REGULATORY COMPLIANCE MONITORING AGENT (Alpha)")
+st.title("REGULATORY COMPLIANCE MONITORING AGENT (alpha release)")
 
 uploaded_file = st.file_uploader(
     "Upload Financial documents here (.txt or .pdf )",type=['pdf','txt']
