@@ -1,3 +1,7 @@
-from langchain_ollama import ChatOllama
-llm = ChatOllama(model="llama3",streaming=True)
-print(llm.invoke("say ok").content)
+import json
+location = 'data/regulations/risk_data/test_set.json'
+
+with open(location, 'r') as file:
+    data = json.load(file)
+
+print(len(data))

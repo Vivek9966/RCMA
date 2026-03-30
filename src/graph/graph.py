@@ -5,14 +5,12 @@ from .router import router
 
 def graph():
     builder = StateGraph(ComplianceState)
-
     builder.add_node("query_analyzer_node",query_analyzer_node)
     builder.add_node('rag_retriever_node', rag_retriever_node)
     builder.add_node('compliance_reasoning_node',compliance_reasoning_node)
     builder.add_node('violation_node',violation_node)
     builder.add_node('report_compiler_node',report_compiler_node)
     builder.add_node('human_escalation_node',human_escalation_node)
-
     builder.set_entry_point('query_analyzer_node')
     builder.add_edge("query_analyzer_node", "rag_retriever_node")
     builder.add_edge("rag_retriever_node", "compliance_reasoning_node")

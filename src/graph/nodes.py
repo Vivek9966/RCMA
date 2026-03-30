@@ -17,7 +17,8 @@ PROMPTS_PATH = Path(os.getenv("PROMPTS_PATH"))
 VECTORSTORE_PATH = Path(os.getenv("VECTORSTORE_PATH"))
 EMBEDDINGS_MODEL = 'aminhaeri/risk-embed'
 llm = ChatOllama(model='llama3',temperature=0,streaming= False)
-    
+embedding = HuggingFaceEmbeddings(model_name=EMBEDDINGS_MODEL)    
+vectore_store = FAISS.load_local(VECTORSTORE_PATH,embeddings=embedding,allow_dangerous_deserialization=True)
 
 with open(Path(PROMPTS_PATH) / 'prompts.txt') as file:
     template = file.read()
@@ -61,8 +62,8 @@ def ChunkCitationWrapper(results) -> List[ChunkCitation]:
 
 def rag_retriever_node(state: ComplianceState)-> dict:
     questions = state['compliance_questions']
-    embedding = HuggingFaceEmbeddings(model_name=EMBEDDINGS_MODEL)
-    vectore_store = FAISS.load_local(VECTORSTORE_PATH,embeddings=embedding,allow_dangerous_deserialization=True)
+    
+    
     contexts=[]
     for question in questions:
         results = vectore_store.similarity_search_with_score(question,k=3)
